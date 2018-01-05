@@ -87,7 +87,6 @@
                     android:maxLines="20"
                     android:paddingBottom="@dimen/detail_body_bottom_margin"
                     android:textColor="@color/gray"
-                    android:textColorLink="@color/theme_accent"
                     android:textSize="@dimen/detail_body_text_size" />
 
             </com.example.xyzreader.ui.MaxWidthLinearLayout>
@@ -101,11 +100,11 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:background="@drawable/add_fab_background"
         android:contentDescription="@string/action_share"
         android:src="@drawable/ic_share"
         android:stateListAnimator="@animator/fab_state_list_anim"
         app:elevation="@dimen/fab_elevation"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        app:layout_behavior=".ui.FabBehaviour" />
 
 </com.example.xyzreader.ui.DrawInsetsFrameLayout>
