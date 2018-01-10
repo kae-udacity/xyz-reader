@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -120,6 +119,16 @@ public class ArticleDetailActivity extends AppCompatActivity
         onSupportNavigateUp();
     }
 
+    @Override
+    public void setUpActionBar(ArticleDetailFragment fragment) {
+        int position = mPager.getCurrentItem();
+        ArticleDetailFragment currentFragment = (ArticleDetailFragment) mPagerAdapter.getItem(position);
+
+        if (currentFragment == fragment) {
+            fragment.setUpActionBar();
+        }
+    }
+
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         MyPagerAdapter(FragmentManager fragmentManager) {
@@ -134,7 +143,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(position, mCursor.getLong(ArticleLoader.Query._ID));
+            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
         }
 
         @Override

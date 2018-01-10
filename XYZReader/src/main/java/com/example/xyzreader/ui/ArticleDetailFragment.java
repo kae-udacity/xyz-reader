@@ -52,13 +52,11 @@ public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "ArticleDetailFragment";
 
-    public static final String PAGER_POSITION = "pager_position";
     public static final String ARG_ITEM_ID = "item_id";
 
     private OnArticleDetailFragmentListener listener;
     private Cursor mCursor;
     private long mItemId;
-    private int pagerPosition = -1;
     private View mRootView;
     private int mMutedColor = 0xFF333333;
 
@@ -77,9 +75,8 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(int pagerPosition, long itemId) {
+    public static ArticleDetailFragment newInstance(long itemId) {
         Bundle arguments = new Bundle();
-        arguments.putInt(PAGER_POSITION, pagerPosition);
         arguments.putLong(ARG_ITEM_ID, itemId);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
@@ -89,10 +86,6 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(PAGER_POSITION)) {
-            pagerPosition = getArguments().getInt(PAGER_POSITION);
-        }
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
@@ -121,9 +114,7 @@ public class ArticleDetailFragment extends Fragment implements
         // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
 
-        if (pagerPosition == 0) {
-            setUpActionBar();
-        }
+        listener.setUpActionBar(this);
     }
 
     @Override
@@ -294,5 +285,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     public interface OnArticleDetailFragmentListener {
         void onUpButtonPressed();
+
+        void setUpActionBar(ArticleDetailFragment fragment);
     }
 }
