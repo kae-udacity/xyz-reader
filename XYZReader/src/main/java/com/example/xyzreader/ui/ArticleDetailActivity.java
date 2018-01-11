@@ -64,9 +64,7 @@ public class ArticleDetailActivity extends AppCompatActivity
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
                 }
-                ArticleDetailFragment fragment = (ArticleDetailFragment) mPagerAdapter
-                        .instantiateItem(mPager, mPager.getCurrentItem());
-                fragment.setUpActionBar();
+                setUpActionBar();
             }
         });
 
@@ -120,13 +118,10 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void setUpActionBar(ArticleDetailFragment fragment) {
-        int position = mPager.getCurrentItem();
-        ArticleDetailFragment currentFragment = (ArticleDetailFragment) mPagerAdapter.getItem(position);
-
-        if (currentFragment == fragment) {
-            fragment.setUpActionBar();
-        }
+    public void setUpActionBar() {
+        ArticleDetailFragment fragment = (ArticleDetailFragment) mPagerAdapter
+                .instantiateItem(mPager, mPager.getCurrentItem());
+        fragment.setUpActionBar();
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

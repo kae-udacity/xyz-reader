@@ -19,10 +19,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -38,7 +38,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -114,7 +113,7 @@ public class ArticleDetailFragment extends Fragment implements
         // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
 
-        listener.setUpActionBar(this);
+        listener.setUpActionBar();
     }
 
     @Override
@@ -248,9 +247,14 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     public void setUpActionBar() {
-        Toolbar toolbar = ((AppCompatActivity) getActivity()).findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(null);
+        if (mRootView != null) {
+            Toolbar toolbar = mRootView.findViewById(R.id.toolbar);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(null);
+            }
+        }
     }
 
     @Override
@@ -286,6 +290,6 @@ public class ArticleDetailFragment extends Fragment implements
     public interface OnArticleDetailFragmentListener {
         void onUpButtonPressed();
 
-        void setUpActionBar(ArticleDetailFragment fragment);
+        void setUpActionBar();
     }
 }
