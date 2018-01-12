@@ -34,7 +34,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         ArticleDetailFragment.OnArticleDetailFragmentListener {
 
     private static final String STATE_CURRENT_PAGE_POSITION = "state_current_page_position";
-    private Cursor mCursor;
+    private static Cursor cursor;
     private long mStartId;
 
     private ViewPager mPager;
@@ -50,15 +50,13 @@ public class ArticleDetailActivity extends AppCompatActivity
             if (returning) {
                 ImageView sharedElement = currentFragment.getPhotoImageView();
                 if (sharedElement == null) {
-                    // If shared element is null, then it has been scrolled off screen and
-                    // no longer visible. In this case we cancel the shared element transition by
-                    // removing the shared element from the shared elements map.
+                    // If shared element is null, then it is no longer visible.
+                    // In this case we cancel the shared element transition.
                     names.clear();
                     sharedElements.clear();
                 } else if (startingPosition != currentPosition) {
-                    // If the user has swiped to a different ViewPager page, then we need to
-                    // remove the old shared element and replace it with the new shared element
-                    // that should be transitioned instead.
+                    // If the user has swiped to a different page, we remove the
+                    // old shared element and replace it with the new shared element.
                     names.clear();
                     names.add(sharedElement.getTransitionName());
                     sharedElements.clear();
@@ -99,8 +97,8 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 currentPosition = position;
-                if (mCursor != null) {
-                    mCursor.moveToPosition(position);
+                if (cursor != null) {
+                    cursor.moveToPosition(position);
                 }
                 setUpActionBar();
             }
@@ -147,20 +145,20 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mCursor = cursor;
+        ArticleDetailActivity.cursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
 
         // Select the start ID
         if (mStartId > 0) {
-            mCursor.moveToFirst();
+            ArticleDetailActivity.cursor.moveToFirst();
             // TODO: optimize
-            while (!mCursor.isAfterLast()) {
-                if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
-                    final int position = mCursor.getPosition();
+            while (!ArticleDetailActivity.cursor.isAfterLast()) {
+                if (ArticleDetailActivity.cursor.getLong(ArticleLoader.Query._ID) == mStartId) {
+                    final int position = ArticleDetailActivity.cursor.getPosition();
                     mPager.setCurrentItem(position, false);
                     break;
                 }
-                mCursor.moveToNext();
+                ArticleDetailActivity.cursor.moveToNext();
             }
             mStartId = 0;
         }
@@ -168,7 +166,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mCursor = null;
+        cursor = null;
         mPagerAdapter.notifyDataSetChanged();
     }
 
@@ -203,13 +201,13 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(position, startingPosition, mCursor.getLong(ArticleLoader.Query._ID));
+            cursor.moveToPosition(position);
+            return ArticleDetailFragment.newInstance(position, startingPosition, cursor.getLong(ArticleLoader.Query._ID));
         }
 
         @Override
         public int getCount() {
-            return (mCursor != null) ? mCursor.getCount() : 0;
+            return (cursor != null) ? cursor.getCount() : 0;
         }
     }
 }
